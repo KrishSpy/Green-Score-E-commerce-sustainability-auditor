@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Analyzer | Sustainability Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            --bar-gradient: linear-gradient(90deg, #40916c 0%, #b7e4c7 100%);
+            --eco-green: #2ecc71;
+            --danger-red: #e74c3c;
+            --text-main: #1b4332;
+        }
+
+        body { 
+            background: #f0f7f4;
+            background-image: radial-gradient(#d8e2dc 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* Heading & Typography */
+        h1, h2, h3, .heading-font {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #081c15;
+        }
+
+        .truly-green {
+            color: var(--eco-green);
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
+        }
+
+        /* Instructions Section */
+        .info-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid rgba(45, 106, 79, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .step-tag {
+            font-weight: 700;
+            color: #2d6a4f;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Input Styling */
+        .glass-input-group {
+            background: white;
+            padding: 10px;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-control {
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 1.1rem;
+            padding-left: 20px;
+        }
+
+        .btn-analyze {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 67, 50, 0.3);
+            color: white;
+        }
+
+        /* Main Score Progress Bar */
+        .score-container {
+            background: #e9ecef;
+            border-radius: 100px;
+            height: 30px;
+            margin: 30px 0;
+            overflow: visible;
+            position: relative;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 100px;
+            background: var(--bar-gradient);
+            position: relative;
+            transition: width 2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        .score-label {
+            position: absolute;
+            right: 0;
+            top: -40px;
+            background: #081c15;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        /* Result Cards */
+        .card {
+            border: none;
+            border-radius: 25px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        .alt-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .issue-box {
+            background: #fff5f5;
+            border-left: 5px solid var(--danger-red);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            color: #9b2226;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="hero-title">Is your product <span class="truly-green">Truly Green?</span></h1>
+        <p class="text-muted fs-5">Reveal the environmental truth behind every click.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            
+            <div class="info-panel">
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <span class="step-tag">What to do</span>
+                        <p class="small mb-0">Paste a link from any major retailer (Amazon, Walmart, etc.) into the analyzer below.</p>
+                    </div>
+                    <div class="col-md-6 ps-md-4">
+                        <span class="step-tag">What it will do</span>
+                        <p class="small mb-0">Our AI audits the product's carbon footprint and materials to give you an honest eco-score.</p>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" class="mb-5">
+                <div class="glass-input-group">
+                    <input type="text" name="url" class="form-control" placeholder="https://store.com/your-product-link" required>
+                    <button class="btn btn-analyze" type="submit">Analyze Now</button>
+                </div>
+            </form>
+
+            {% if analysis %}
+                {% if analysis.error %}
+                    <div class="alert alert-danger rounded-4">{{ analysis.error }}</div>
+                {% else %}
+                    
+                    <div class="card p-4 p-md-5 mb-5 bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="mb-0">{{ analysis.product_name|title }}</h2>
+                            <span class="badge rounded-pill bg-success px-3 py-2">AI Audited</span>
+                        </div>
+
+                        <div class="score-container">
+                            <div class="score-fill" style="width: {{ analysis.overall_score }}%">
+                                <div class="score-label">{{ analysis.overall_score }}%</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h4 class="heading-font h5 text-uppercase">Summary Report</h4>
+                            <p class="lead text-muted">{{ analysis.summary }}</p>
+                        </div>
+
+                        <div class="mt-5">
+                            <h4 class="heading-font h5 text-uppercase text-danger mb-3">Red Flags</h4>
+                            {% for issue in analysis.issues %}
+                            <div class="issue-box">
+                                <strong>⚠️ Warning:</strong> {{ issue }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <h3 class="text-center mb-4 heading-font">Sustainable Alternatives</h3>
+                    <div class="row g-4">
+                        {% for alt in analysis.alternatives %}
+                        <div class="col-md-6">
+                            <div class="card alt-card h-100 p-4 bg-white border-bottom border-success border-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="fs-2">{{ alt.icon }}</span>
+                                    <div class="text-end">
+                                        <div class="small text-muted fw-bold">ECO SCORE</div>
+                                        <div class="h4 fw-bold text-success">{{ alt.score }}%</div>
+                                    </div>
+                                </div>
+                                <h5 class="fw-bold">{{ alt.name }}</h5>
+                                <p class="text-muted small">{{ alt.description }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-5">
+    <p class="text-muted small">Helping you shop responsibly for a better tomorrow.</p>
+</footer>
+
+</body>
+</html>
